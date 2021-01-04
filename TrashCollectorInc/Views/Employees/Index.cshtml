@@ -10,11 +10,21 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form asp-action="FilterByDay">
+    <div>
+        <label>Pick Up Day: </label>
+        <select name="searchString" asp-items="ViewBag.WeeklyPickupDay"></select>
+    </div>
+    <div>
+        <input type="submit" value="Search" class="btn btn-primary"/>
+    </div>
+</form>
 <table class="table">
     <thead>
+        
         <tr>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["WeekDaySortParm"]"> @Html.DisplayNameFor(model => model.WeeklyPickupDay)</a>
+                <a asp-action="Index" name="searchString"> @Html.DisplayNameFor(model => model.WeeklyPickupDay)</a>
             </th>
 
             <th>

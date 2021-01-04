@@ -50,8 +50,7 @@ namespace TrashCollectorInc.Models
         public DateTime? SuspendPickup { get; set; }
 
         [Display(Name = "Weekly Pickup Day")]
-        [NotMapped]
-        public IEnumerable<SelectListItem> WeeklyPickupDay { get; set; }
+        public string WeeklyPickupDay { get; set; }
 
         [Display(Name = "One-time Pickup Request")]
         [DataType(DataType.Date)]

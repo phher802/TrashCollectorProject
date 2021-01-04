@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,41 +19,31 @@ namespace TrashCollectorInc.Controllers
         {
             _context = context;
         }
+        public async Task<IActionResult> Index()
+        {
+            ViewData["WeeklyPickupDay"] = WeeklyPickupDay();
+
+            //query customers in my zip code and have a pickup today
+            //i.e. only see customers in my zip code that have a pickup Monday
+
+            return View(await _context.Customers.ToListAsync());
+        }
 
         // GET: Employees
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> FilterByDay(string searchString)
         {
-
-            ViewData["WeekDaySortParm"] = String.IsNullOrEmpty(sortOrder) ? "Weekday_desc" : "";
-            ViewData["ZipCodeSortParm"] = sortOrder == "ZipCode" ? "Zipcode_desc" : "ZipCode";
-            ViewData["CurrentFilter"] = searchString;
-
-            var customers = from c in _context.Customers
-                            select c;
+            //query for Employee logged in
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var employeeLoggedIn = _context.Employees.Where(e => e.IdentityUserId == userId).SingleOrDefault();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                customers = customers.Where(c => c.WeeklyPickupDay.ToString().Contains(searchString)
-                 || c.ZipCode.ToString().Contains(searchString));
+                var customers = _context.Customers.Where(c => c.WeeklyPickupDay.Contains(searchString)).ToList();
+                var customersByDay = customers.Where(c => c.ZipCode == employeeLoggedIn.ZipCode).ToList();
+                return View(customersByDay);
             }
-            switch (sortOrder)
-            {
-                case "WeekDay_desc":
-                    customers = customers.OrderByDescending(c => c.WeeklyPickupDay);
-                    break;
-                case "ZipCode":
-                    customers = customers.Include(e => e.IdentityUserId).OrderBy(c => c.ZipCode);
-                    break;
-                case "ZipCode_desc":
-                    customers = customers.Include(e => e.IdentityUserId).OrderByDescending(c => c.ZipCode);
-                    break;
-                default:
-                    customers = customers.OrderBy(c => c.WeeklyPickupDay);
-                    break;
-            }
-            return View(await customers.AsNoTracking().ToListAsync());
-            //var applicationDbContext = _context.Employees.Include(e => e.IdentityUser);
-            //return View(await applicationDbContext.ToListAsync());
+           
+            return View("Index");
         }
 
         // GET: Employees/Details/5
@@ -88,6 +79,16 @@ namespace TrashCollectorInc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,ZipCode,IdentityUserId")] Employee employee)
         {
+           
+            if (employee != null)
+            {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                employee.IdentityUserId = userId;
+                _context.Add(employee);
+                _context.SaveChanges();
+            }
+
+
             if (ModelState.IsValid)
             {
                 _context.Add(employee);
@@ -151,6 +152,14 @@ namespace TrashCollectorInc.Controllers
             return View(employee);
         }
 
+        public async Task<IActionResult> ConfirmPickup(int id)
+        {
+            //query the customer table for the customer with the id
+            //update the customer balance
+
+            return RedirectToAction("Index");
+        }
+
         // GET: Employees/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -180,7 +189,17 @@ namespace TrashCollectorInc.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        public List<SelectListItem> WeeklyPickupDay()
+        {
+            List<SelectListItem> weekday = new List<SelectListItem>();
 
+            weekday.Add(new SelectListItem { Text = "Monday", Value = "Monday" });
+            weekday.Add(new SelectListItem { Text = "Tuesday", Value = "Tuesday" });
+            weekday.Add(new SelectListItem { Text = "Wednesday", Value = "Wednesday" });
+            weekday.Add(new SelectListItem { Text = "Thursday", Value = "Thursday" });
+            weekday.Add(new SelectListItem { Text = "Friday", Value = "Friday" });
+            return weekday;
+        }
         private bool EmployeeExists(int id)
         {
             return _context.Employees.Any(e => e.Id == id);

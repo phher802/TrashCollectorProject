@@ -54,6 +54,18 @@ namespace TrashCollectorInc.Controllers
             return View(customer);
         }
 
+        public List<SelectListItem> WeeklyPickupDay()
+        {
+            List<SelectListItem> weekday = new List<SelectListItem>();
+
+            weekday.Add(new SelectListItem { Text = "Monday", Value = "1" });
+            weekday.Add(new SelectListItem { Text = "Tuesday", Value = "2" });
+            weekday.Add(new SelectListItem { Text = "Wednesday", Value = "3" });
+            weekday.Add(new SelectListItem { Text = "Thursday", Value = "4" });
+            weekday.Add(new SelectListItem { Text = "Friday", Value = "5" });
+            return weekday;
+        }
+
         // GET: Customers/Create
         public IActionResult Create()
         {
