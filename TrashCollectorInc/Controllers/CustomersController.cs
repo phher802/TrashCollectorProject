@@ -68,7 +68,7 @@ namespace TrashCollectorInc.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,StreetAddress,CityName,State,ZipCode,PhoneNumber,StartPickupDate,SuspendPickup,OneTimePickupDateRequest,IdentityUserId")] Customer customer)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,StreetAddress,CityName,State,ZipCode,PhoneNumber,StartPickupDate,SuspendPickup,WeeklyPickupDay")] Customer customer)
         {
             if(customer != null)
             {
@@ -110,7 +110,7 @@ namespace TrashCollectorInc.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,StreetAddress,CityName,State,ZipCode,PhoneNumber,StartPickupDate,SuspendPickup,OneTimePickupDateRequest,MonthlyCharge,IdentityUserId")] Customer customer)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,StreetAddress,CityName,State,ZipCode,PhoneNumber,StartPickupDate,SuspendPickup,OneTimePickupDateRequest,WeeklyPickupDay")] Customer customer)
         {
             if (id != customer.Id)
             {
