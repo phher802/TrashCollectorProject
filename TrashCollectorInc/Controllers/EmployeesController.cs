@@ -19,14 +19,14 @@ namespace TrashCollectorInc.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             ViewData["WeeklyPickupDay"] = WeeklyPickupDay();
 
             //query customers in my zip code and have a pickup today
             //i.e. only see customers in my zip code that have a pickup Monday
 
-            return View(await _context.Customers.ToListAsync());
+            return View( _context.Customers.ToList());
         }
 
         // GET: Employees
@@ -77,7 +77,7 @@ namespace TrashCollectorInc.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,ZipCode,IdentityUserId")] Employee employee)
+        public IActionResult Create([Bind("Id,FirstName,LastName,ZipCode,IdentityUserId")] Employee employee)
         {
            
             if (employee != null)
@@ -89,15 +89,16 @@ namespace TrashCollectorInc.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            return View(employee);
 
             //if (ModelState.IsValid)
             //{
             //    _context.Add(employee);
             //    await _context.SaveChangesAsync();
-                
+
             //}
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
-            return View(employee);
+            // ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
+
         }
 
         // GET: Employees/Edit/5
@@ -113,7 +114,7 @@ namespace TrashCollectorInc.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
+           // ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
             return View(employee);
         }
 
@@ -149,7 +150,7 @@ namespace TrashCollectorInc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
+         //   ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
             return View(employee);
         }
 
@@ -177,15 +178,15 @@ namespace TrashCollectorInc.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees
+            var customer = await _context.Customers
                 .Include(e => e.IdentityUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (employee == null)
+            if (customer == null)
             {
                 return NotFound();
             }
 
-            return View(employee);
+            return View(customer);
         }
 
         // POST: Employees/Delete/5
@@ -193,8 +194,8 @@ namespace TrashCollectorInc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
-            _context.Employees.Remove(employee);
+            var customer = await _context.Customers.FindAsync(id);
+            _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
