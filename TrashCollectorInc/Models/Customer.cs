@@ -27,11 +27,9 @@ namespace TrashCollectorInc.Models
         [Required(ErrorMessage = "Street Address is a Required Input")]
         public string StreetAddress { get; set; }
 
-        //include city in a dropdown list auto populated by state?
         [Display(Name = "City")]
         public string CityName { get; set; }
 
-        //include in a dropdown list? 
         public string State { get; set; }
 
         [Display(Name = "Zip Code")]
