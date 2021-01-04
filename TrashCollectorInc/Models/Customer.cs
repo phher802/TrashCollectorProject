@@ -34,7 +34,7 @@ namespace TrashCollectorInc.Models
 
         [Display(Name = "Zip Code")]
         [Required(ErrorMessage = "Zip Code is a Required Input")]
-        public String ZipCode { get; set; }
+        public string ZipCode { get; set; }
 
         [Display(Name = "Primary Phone Number")]
         [DataType(DataType.PhoneNumber)]

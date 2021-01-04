@@ -54,15 +54,15 @@ namespace TrashCollectorInc.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees
+            var customer = await _context.Customers
                 .Include(e => e.IdentityUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (employee == null)
+            if (customer == null)
             {
                 return NotFound();
             }
 
-            return View(employee);
+            return View(customer);
         }
 
         // GET: Employees/Create
@@ -86,15 +86,16 @@ namespace TrashCollectorInc.Controllers
                 employee.IdentityUserId = userId;
                 _context.Add(employee);
                 _context.SaveChanges();
-            }
-
-
-            if (ModelState.IsValid)
-            {
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+
+            //if (ModelState.IsValid)
+            //{
+            //    _context.Add(employee);
+            //    await _context.SaveChangesAsync();
+                
+            //}
             ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
             return View(employee);
         }
@@ -152,9 +153,9 @@ namespace TrashCollectorInc.Controllers
             return View(employee);
         }
 
-        public async Task<IActionResult> ConfirmPickup(int id)
+        public IActionResult ConfirmPickup(int id)
         {
-            var customer = _context.Customers.Where(c => c.Id == id).Include(c => c.MonthlyCharge).FirstOrDefault();
+            var customer = _context.Customers.Where(c => c.Id == id).FirstOrDefault();
             bool isConfirmed = false;
 
             if (isConfirmed == true)
