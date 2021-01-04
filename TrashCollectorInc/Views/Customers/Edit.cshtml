@@ -1,18 +1,19 @@
 ﻿@model TrashCollectorInc.Models.Customer
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
+<h1>Edit</h1>
 
 <h4>Customer</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
                 <input asp-for="FirstName" class="form-control" />
@@ -66,17 +67,18 @@
           
             <div class="form-group">
                 <label asp-for="WeeklyPickupDay" class="control-label"></label>
-                <select asp-for="WeeklyPickupDay" class ="form-control" asp-items="ViewBag.Weekday"></select>
+                <select asp-for="WeeklyPickupDay" class="form-control" asp-items="ViewBag.Weekday"></select>
+                <span asp-validation-for="WeeklyPickupDay" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Profile</a>
+    <a asp-action="Index">Back to Profile</a>
 </div>
 
 @section Scripts {
