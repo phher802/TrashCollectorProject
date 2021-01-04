@@ -57,7 +57,9 @@ namespace TrashCollectorInc.Controllers
         // GET: Customers/Create
         public IActionResult Create()
         {
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
+
+            //ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewBag.Weekday = new SelectList(_context.Customers, "Id", "WeeklyPickupDay");
             return View();
         }
 
@@ -66,15 +68,23 @@ namespace TrashCollectorInc.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,StreetAddress,CityName,State,ZipCode,PhoneNumber,StartPickupDate,SuspendPickup,OneTimePickupDateRequest,MonthlyCharge,IdentityUserId")] Customer customer)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,StreetAddress,CityName,State,ZipCode,PhoneNumber,StartPickupDate,SuspendPickup,OneTimePickupDateRequest,IdentityUserId")] Customer customer)
         {
+            if(customer != null)
+            {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                customer.IdentityUserId = userId;
+                _context.Add(customer);
+                _context.SaveChanges();
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", customer.IdentityUserId);
+           
             return View(customer);
         }
 
