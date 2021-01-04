@@ -20,10 +20,39 @@ namespace TrashCollectorInc.Controllers
         }
 
         // GET: Employees
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            var applicationDbContext = _context.Employees.Include(e => e.IdentityUser);
-            return View(await applicationDbContext.ToListAsync());
+
+            ViewData["WeekDaySortParm"] = String.IsNullOrEmpty(sortOrder) ? "Weekday_desc" : "";
+            ViewData["ZipCodeSortParm"] = sortOrder == "ZipCode" ? "Zipcode_desc" : "ZipCode";
+            ViewData["CurrentFilter"] = searchString;
+
+            var customers = from c in _context.Customers
+                            select c;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                customers = customers.Where(c => c.WeeklyPickupDay.ToString().Contains(searchString)
+                 || c.ZipCode.ToString().Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "WeekDay_desc":
+                    customers = customers.OrderByDescending(c => c.WeeklyPickupDay);
+                    break;
+                case "ZipCode":
+                    customers = customers.Include(e => e.IdentityUserId).OrderBy(c => c.ZipCode);
+                    break;
+                case "ZipCode_desc":
+                    customers = customers.Include(e => e.IdentityUserId).OrderByDescending(c => c.ZipCode);
+                    break;
+                default:
+                    customers = customers.OrderBy(c => c.WeeklyPickupDay);
+                    break;
+            }
+            return View(await customers.AsNoTracking().ToListAsync());
+            //var applicationDbContext = _context.Employees.Include(e => e.IdentityUser);
+            //return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Employees/Details/5
