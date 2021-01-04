@@ -69,9 +69,10 @@ namespace TrashCollectorInc.Controllers
         // GET: Customers/Create
         public IActionResult Create()
         {
-
+            ViewData["WeeklyPickupDay"] = WeeklyPickupDay();
+          
             //ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewBag.Weekday = new SelectList(_context.Customers, "Id", "WeeklyPickupDay");
+          //  ViewBag.Weekday = new SelectList(_context.Customers, "Id", "WeeklyPickupDay");
             return View();
         }
 

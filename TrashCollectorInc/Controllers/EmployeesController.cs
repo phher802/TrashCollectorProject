@@ -154,6 +154,14 @@ namespace TrashCollectorInc.Controllers
 
         public async Task<IActionResult> ConfirmPickup(int id)
         {
+            var customer = _context.Customers.Where(c => c.Id == id).Include(c => c.MonthlyCharge).FirstOrDefault();
+            bool isConfirmed = false;
+
+            if (isConfirmed == true)
+            {
+                customer.MonthlyCharge += 25;
+            }
+
             //query the customer table for the customer with the id
             //update the customer balance
 
