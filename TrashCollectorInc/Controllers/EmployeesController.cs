@@ -80,12 +80,15 @@ namespace TrashCollectorInc.Controllers
         public IActionResult Create([Bind("Id,FirstName,LastName,ZipCode,IdentityUserId")] Employee employee)
         {
            
-            if (employee != null)
+            if (ModelState.IsValid)
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 employee.IdentityUserId = userId;
                 _context.Add(employee);
                 _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }else if(employee != null)
+            {
                 return RedirectToAction(nameof(Index));
             }
 
