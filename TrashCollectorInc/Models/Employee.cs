@@ -28,4 +28,4 @@ namespace TrashCollectorInc.Models
         public IdentityUser IdentityUser { get; set; }
     }
 }
-}
+
