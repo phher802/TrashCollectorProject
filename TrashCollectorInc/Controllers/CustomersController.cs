@@ -104,6 +104,8 @@ namespace TrashCollectorInc.Controllers
         // GET: Customers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ViewData["WeeklyPickupDay"] = WeeklyPickupDay();
+
             if (id == null)
             {
                 return NotFound();

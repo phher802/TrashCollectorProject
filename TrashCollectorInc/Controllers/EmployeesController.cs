@@ -30,15 +30,15 @@ namespace TrashCollectorInc.Controllers
         }
 
         // GET: Employees
-        public async Task<IActionResult> FilterByDay(string searchString)
+        public IActionResult FilterByDay(string searchString)
         {
             //query for Employee logged in
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var employeeLoggedIn = _context.Employees.Where(e => e.IdentityUserId == userId).SingleOrDefault();
+            var employeeLoggedIn =  _context.Employees.Where(e => e.IdentityUserId == userId).SingleOrDefault();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                var customers = _context.Customers.Where(c => c.WeeklyPickupDay.Contains(searchString)).ToList();
+                var customers =  _context.Customers.Where(c => c.WeeklyPickupDay.Contains(searchString)).ToList();
                 var customersByDay = customers.Where(c => c.ZipCode == employeeLoggedIn.ZipCode).ToList();
                 return View(customersByDay);
             }
