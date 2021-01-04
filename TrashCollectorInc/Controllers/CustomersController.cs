@@ -58,11 +58,11 @@ namespace TrashCollectorInc.Controllers
         {
             List<SelectListItem> weekday = new List<SelectListItem>();
 
-            weekday.Add(new SelectListItem { Text = "Monday", Value = "1" });
-            weekday.Add(new SelectListItem { Text = "Tuesday", Value = "2" });
-            weekday.Add(new SelectListItem { Text = "Wednesday", Value = "3" });
-            weekday.Add(new SelectListItem { Text = "Thursday", Value = "4" });
-            weekday.Add(new SelectListItem { Text = "Friday", Value = "5" });
+            weekday.Add(new SelectListItem { Text = "Monday", Value = "Monday" });
+            weekday.Add(new SelectListItem { Text = "Tuesday", Value = "Tuesday" });
+            weekday.Add(new SelectListItem { Text = "Wednesday", Value = "Wednesday" });
+            weekday.Add(new SelectListItem { Text = "Thursday", Value = "Thursday" });
+            weekday.Add(new SelectListItem { Text = "Friday", Value = "Friday" });
             return weekday;
         }
 
