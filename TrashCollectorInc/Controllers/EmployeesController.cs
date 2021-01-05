@@ -19,7 +19,7 @@ namespace TrashCollectorInc.Controllers
         {
             _context = context;
         }
-        public IActionResult Index(string searchString)
+        public IActionResult Index()
         {
             ViewData["WeeklyPickupDay"] = WeeklyPickupDay();
 
@@ -31,17 +31,18 @@ namespace TrashCollectorInc.Controllers
                 return RedirectToAction(nameof(Create));
             }
 
-            var customer = _context.Customers.Where(c => c.IdentityUserId == userId).FirstOrDefault();
-            var customers = _context.Customers.Where(c => c.WeeklyPickupDay.Contains(searchString)).ToList();
+           // var customer = _context.Customers.Where(c => c.Id == id).FirstOrDefault();
+         
             var currentDayOfWeek = DateTime.Now.DayOfWeek.ToString();
 
            // if (!String.IsNullOrEmpty(currentDayOfWeek))
-                if(currentDayOfWeek == searchString)
+              if(true)
             {
-                var matchZipCode = _context.Customers.Where(c => c.ZipCode == employee.ZipCode).FirstOrDefault();
+                var customers = _context.Customers.Where(c => c.WeeklyPickupDay == currentDayOfWeek).ToList();
+                var matchZipCode = customers.Where(c => c.ZipCode == employee.ZipCode).ToList();
               
-               
-               return View(customers);
+
+                return View(customers);
             }
             //query customers in my zip code and have a pickup today
             //i.e. only see customers in my zip code that have a pickup Monday
@@ -53,15 +54,16 @@ namespace TrashCollectorInc.Controllers
         // GET: Employees
         public IActionResult FilterByDay(string searchString)
         {
+            ViewData["WeeklyPickupDay"] = WeeklyPickupDay();
             //query for Employee logged in
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var employeeLoggedIn =  _context.Employees.Where(e => e.IdentityUserId == userId).SingleOrDefault();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                var customers =  _context.Customers.Where(c => c.WeeklyPickupDay.Contains(searchString)).ToList();
+                var customers =  _context.Customers.Where(c => c.WeeklyPickupDay == searchString).ToList();
                 var customersByDay = customers.Where(c => c.ZipCode == employeeLoggedIn.ZipCode).ToList();
-                //return customersByDay;
+                return View("Index",customersByDay);
             }
            
             return View("Index");
