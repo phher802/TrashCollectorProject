@@ -86,7 +86,7 @@
                     @Html.DisplayFor(modelItem => item.OneTimePickupDateRequest)
                 </td>
                 <td>
-                    <form asp-action="ConfirmPickup">                   
+                    <form asp-action="ConfirmPickup" asp-route-id="@item.Id">                   
                         <div>
                             <input type="submit" value="Confirm Pickup" class="btn btn-primary" />
                         </div>

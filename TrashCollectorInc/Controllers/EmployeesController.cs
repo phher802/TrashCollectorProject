@@ -19,7 +19,7 @@ namespace TrashCollectorInc.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
             ViewData["WeeklyPickupDay"] = WeeklyPickupDay();
 
@@ -31,13 +31,15 @@ namespace TrashCollectorInc.Controllers
                 return RedirectToAction(nameof(Create));
             }
 
-            var customer = _context.Customers.Where(c => c.IdentityUserId == userId).SingleOrDefault();
-            var employeeLoggedIn = _context.Employees.Where(e => e.IdentityUserId == userId).SingleOrDefault();
-            var matchZipCode = _context.Customers.Where(c => c.ZipCode == employeeLoggedIn.ZipCode).ToList().ToString();
+            var customer = _context.Customers.Where(c => c.IdentityUserId == userId).FirstOrDefault();
+            var customers = _context.Customers.Where(c => c.WeeklyPickupDay.Contains(searchString)).ToList();
+            var currentDayOfWeek = DateTime.Now.DayOfWeek.ToString();
 
-            if (!String.IsNullOrEmpty(matchZipCode))
+           // if (!String.IsNullOrEmpty(currentDayOfWeek))
+                if(currentDayOfWeek == searchString)
             {
-                var customers = _context.Customers.Where(c => c.WeeklyPickupDay == DateTime.Today.DayOfWeek.ToString());
+                var matchZipCode = _context.Customers.Where(c => c.ZipCode == employee.ZipCode).FirstOrDefault();
+              
                
                return View(customers);
             }
@@ -178,14 +180,15 @@ namespace TrashCollectorInc.Controllers
 
         public IActionResult ConfirmPickup(int id)
         {
-            var customer = _context.Customers.Where(c => c.Id == id).SingleOrDefault();
-            bool isConfirmed = false;
+            var customer = _context.Customers.Where(c => c.Id == id).FirstOrDefault();
+       
 
-            if (isConfirmed == true)
+            if (customer != null)
             {
                 customer.MonthlyCharge += 25.00;
                 _context.Update(customer);
                 _context.SaveChanges();
+
             }
 
             //query the customer table for the customer with the id
