@@ -19,7 +19,7 @@ namespace TrashCollectorInc.Controllers
         {
             _context = context;
         }
-        public IActionResult Index(string searchString)
+        public IActionResult Index()
         {
             ViewData["WeeklyPickupDay"] = WeeklyPickupDay();
 
@@ -31,19 +31,21 @@ namespace TrashCollectorInc.Controllers
                 return RedirectToAction(nameof(Create));
             }
 
+            var customer = _context.Customers.Where(c => c.IdentityUserId == userId).SingleOrDefault();
             var employeeLoggedIn = _context.Employees.Where(e => e.IdentityUserId == userId).SingleOrDefault();
-          
-            if (!String.IsNullOrEmpty(searchString))
+            var matchZipCode = _context.Customers.Where(c => c.ZipCode == employeeLoggedIn.ZipCode).ToList().ToString();
+
+            if (!String.IsNullOrEmpty(matchZipCode))
             {
-                var customers = _context.Customers.Where(c => c.WeeklyPickupDay.Contains(searchString)).ToList();
-                var customerPickupDay = customers.ToString() == DateTime.Today.DayOfWeek.ToString();
-                var matchZipCode = _context.Customers.Where(c => c.ZipCode == employeeLoggedIn.ZipCode).ToList();
-                return View(customerPickupDay);
+                var customers = _context.Customers.Where(c => c.WeeklyPickupDay == DateTime.Today.DayOfWeek.ToString());
+               
+               return View(customers);
             }
             //query customers in my zip code and have a pickup today
             //i.e. only see customers in my zip code that have a pickup Monday
-
-             return View( _context.Customers.ToList());
+            
+          return View( _context.Customers.ToList());
+           
         }
 
         // GET: Employees
@@ -176,12 +178,14 @@ namespace TrashCollectorInc.Controllers
 
         public IActionResult ConfirmPickup(int id)
         {
-            var customer = _context.Customers.Where(c => c.Id == id).FirstOrDefault();
+            var customer = _context.Customers.Where(c => c.Id == id).SingleOrDefault();
             bool isConfirmed = false;
 
             if (isConfirmed == true)
             {
-                customer.MonthlyCharge += 25;
+                customer.MonthlyCharge += 25.00;
+                _context.Update(customer);
+                _context.SaveChanges();
             }
 
             //query the customer table for the customer with the id

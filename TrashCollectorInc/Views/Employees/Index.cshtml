@@ -8,20 +8,20 @@
 <h1>Index</h1>
 
 @*<p>
-    <a asp-action="Edit">Edit Employee Information</a>
-</p>*@
+        <a asp-action="Edit">Edit Employee Information</a>
+    </p>*@
 <form asp-action="FilterByDay">
     <div>
         <label>Pick Up Day: </label>
         <select name="searchString" asp-items="ViewBag.WeeklyPickupDay"></select>
     </div>
     <div>
-        <input type="submit" value="Search" class="btn btn-primary"/>
+        <input type="submit" value="Search" class="btn btn-primary" />
     </div>
 </form>
 <table class="table">
     <thead>
-        
+
         <tr>
             <th>
                 <a asp-action="Index" name="searchString"> @Html.DisplayNameFor(model => model.WeeklyPickupDay)</a>
@@ -49,45 +49,57 @@
             <th>
                 @Html.DisplayNameFor(model => model.OneTimePickupDateRequest)
             </th>
-           
+            <th>
+                @Html.DisplayNameFor(model => model.MonthlyCharge)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.WeeklyPickupDay)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ZipCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StreetAddress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CityName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.State)
-            </td>      
-            <td>
-                @Html.DisplayFor(modelItem => item.StartPickupDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SuspendPickup)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OneTimePickupDateRequest)
-            </td>
-            
-      
-            <td>
-                <a asp-action="ConfirmPickup" asp-route-id="@item.Id">Confirm Pickup</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WeeklyPickupDay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ZipCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StreetAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CityName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.State)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartPickupDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SuspendPickup)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OneTimePickupDateRequest)
+                </td>
+                <td>
+                    <form asp-action="ConfirmPickup">                   
+                        <div>
+                            <input type="submit" value="Confirm Pickup" class="btn btn-primary" />
+                        </div>
+                    </form>
+                     @*@Html.DisplayFor(modelItem => item.MonthlyCharge)*@
+                </td>
+
+                <td>
+                    @*<a asp-action="ConfirmPickup" asp-route-id="@item.Id">Confirm Pickup</a> |*@
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
