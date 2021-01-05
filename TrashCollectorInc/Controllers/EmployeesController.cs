@@ -32,13 +32,13 @@ namespace TrashCollectorInc.Controllers
             }
 
             var employeeLoggedIn = _context.Employees.Where(e => e.IdentityUserId == userId).SingleOrDefault();
-                  
+          
             if (!String.IsNullOrEmpty(searchString))
             {
-                //  var customers = _context.Customers.Where(c => c.WeeklyPickupDay.Contains(searchString)).ToList();
-                var customerPickupDay = _context.Customers.Where(c => c.WeeklyPickupDay == DateTime.Today.DayOfWeek.ToString()).ToString();
+                var customers = _context.Customers.Where(c => c.WeeklyPickupDay.Contains(searchString)).ToList();
+                var customerPickupDay = customers.ToString() == DateTime.Today.DayOfWeek.ToString();
                 var matchZipCode = _context.Customers.Where(c => c.ZipCode == employeeLoggedIn.ZipCode).ToList();
-                return View(matchZipCode);
+                return View(customerPickupDay);
             }
             //query customers in my zip code and have a pickup today
             //i.e. only see customers in my zip code that have a pickup Monday
