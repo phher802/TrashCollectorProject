@@ -7,9 +7,9 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@*<p>
+    <a asp-action="Edit">Edit Employee Information</a>
+</p>*@
 <form asp-action="FilterByDay">
     <div>
         <label>Pick Up Day: </label>
@@ -49,9 +49,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.OneTimePickupDateRequest)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MonthlyCharge)
-            </th>
+           
             <th></th>
         </tr>
     </thead>
@@ -84,9 +82,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.OneTimePickupDateRequest)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MonthlyCharge)
-            </td>
+            
       
             <td>
                 <a asp-action="ConfirmPickup" asp-route-id="@item.Id">Confirm Pickup</a> |

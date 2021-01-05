@@ -19,14 +19,31 @@ namespace TrashCollectorInc.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
             ViewData["WeeklyPickupDay"] = WeeklyPickupDay();
 
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var employee = _context.Employees.Where(c => c.IdentityUserId == userId).FirstOrDefault();
+
+            if (employee == null)
+            {
+                return RedirectToAction(nameof(Create));
+            }
+
+            var employeeLoggedIn = _context.Employees.Where(e => e.IdentityUserId == userId).SingleOrDefault();
+                  
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                //  var customers = _context.Customers.Where(c => c.WeeklyPickupDay.Contains(searchString)).ToList();
+                var customerPickupDay = _context.Customers.Where(c => c.WeeklyPickupDay == DateTime.Today.DayOfWeek.ToString()).ToString();
+                var matchZipCode = _context.Customers.Where(c => c.ZipCode == employeeLoggedIn.ZipCode).ToList();
+                return View(matchZipCode);
+            }
             //query customers in my zip code and have a pickup today
             //i.e. only see customers in my zip code that have a pickup Monday
 
-            return View( _context.Customers.ToList());
+             return View( _context.Customers.ToList());
         }
 
         // GET: Employees
@@ -40,7 +57,7 @@ namespace TrashCollectorInc.Controllers
             {
                 var customers =  _context.Customers.Where(c => c.WeeklyPickupDay.Contains(searchString)).ToList();
                 var customersByDay = customers.Where(c => c.ZipCode == employeeLoggedIn.ZipCode).ToList();
-                return View(customersByDay);
+                //return customersByDay;
             }
            
             return View("Index");
