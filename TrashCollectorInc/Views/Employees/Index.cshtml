@@ -62,11 +62,11 @@
         {
             <tr>
                 <td>
-                    <a asp-route-id="@item.Id"> @Html.DisplayFor(modelItem => item.WeeklyPickupDay)</a>
+                    @Html.DisplayFor(modelItem => item.WeeklyPickupDay)
                    
                 </td>
                 <td>
-                    <a asp-route-id="@item.Id"></a>
+                  
                     @Html.DisplayFor(modelItem => item.ZipCode)
                 </td>
                 <td>
@@ -98,8 +98,8 @@
 
                 <td>
                     @*<a asp-action="ConfirmPickup" asp-route-id="@item.Id">Confirm Pickup</a> |*@
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                  
                 </td>
             </tr>
         }
