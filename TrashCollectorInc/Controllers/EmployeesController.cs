@@ -31,24 +31,24 @@ namespace TrashCollectorInc.Controllers
                 return RedirectToAction(nameof(Create));
             }
 
-           // var customer = _context.Customers.Where(c => c.Id == id).FirstOrDefault();
-         
+            // var customer = _context.Customers.Where(c => c.Id == id).FirstOrDefault();
+
             var currentDayOfWeek = DateTime.Now.DayOfWeek.ToString();
 
-           // if (!String.IsNullOrEmpty(currentDayOfWeek))
-              if(true)
+            // if (!String.IsNullOrEmpty(currentDayOfWeek))
+            if (true)
             {
                 var customers = _context.Customers.Where(c => c.WeeklyPickupDay == currentDayOfWeek).ToList();
                 var matchZipCode = customers.Where(c => c.ZipCode == employee.ZipCode).ToList();
-              
 
-                return View(customers);
+
+                //return View(customers);
             }
             //query customers in my zip code and have a pickup today
             //i.e. only see customers in my zip code that have a pickup Monday
-            
-          return View( _context.Customers.ToList());
-           
+
+            return View(_context.Customers.ToList());
+
         }
 
         // GET: Employees
@@ -57,15 +57,15 @@ namespace TrashCollectorInc.Controllers
             ViewData["WeeklyPickupDay"] = WeeklyPickupDay();
             //query for Employee logged in
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var employeeLoggedIn =  _context.Employees.Where(e => e.IdentityUserId == userId).SingleOrDefault();
+            var employeeLoggedIn = _context.Employees.Where(e => e.IdentityUserId == userId).SingleOrDefault();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                var customers =  _context.Customers.Where(c => c.WeeklyPickupDay == searchString).ToList();
+                var customers = _context.Customers.Where(c => c.WeeklyPickupDay == searchString).ToList();
                 var customersByDay = customers.Where(c => c.ZipCode == employeeLoggedIn.ZipCode).ToList();
-                return View("Index",customersByDay);
+                return View("Index", customersByDay);
             }
-           
+
             return View("Index");
         }
 
@@ -102,7 +102,7 @@ namespace TrashCollectorInc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("Id,FirstName,LastName,ZipCode,IdentityUserId")] Employee employee)
         {
-           
+
             if (ModelState.IsValid)
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -110,7 +110,8 @@ namespace TrashCollectorInc.Controllers
                 _context.Add(employee);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
-            }else if(employee != null)
+            }
+            else if (employee != null)
             {
                 return RedirectToAction(nameof(Index));
             }
@@ -140,7 +141,7 @@ namespace TrashCollectorInc.Controllers
             {
                 return NotFound();
             }
-           // ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
+            // ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
             return View(employee);
         }
 
@@ -176,14 +177,14 @@ namespace TrashCollectorInc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-         //   ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
+            //   ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
             return View(employee);
         }
 
         public IActionResult ConfirmPickup(int id)
         {
             var customer = _context.Customers.Where(c => c.Id == id).FirstOrDefault();
-       
+
 
             if (customer != null)
             {

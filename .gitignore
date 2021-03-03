@@ -9,6 +9,8 @@
 *.user
 *.userosscache
 *.sln.docstates
+#static APIKey class
+APIKeys.cs
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
